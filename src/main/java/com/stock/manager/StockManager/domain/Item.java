@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Builder
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "categoria", discriminatorType = DiscriminatorType.STRING)
 public abstract class Item {
@@ -20,6 +19,7 @@ public abstract class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nome;
     private double preco;
     private int quantidade;
@@ -35,4 +35,11 @@ public abstract class Item {
     @OneToMany(mappedBy = "item")
     private List<Transacao> transacaoList;
 
+    public Item(String nome, double preco, int quantidade, String foto, Fornecedor fornecedor) {
+        this.nome = nome;
+        this.preco = preco;
+        this.quantidade = quantidade;
+        this.foto = foto;
+        this.fornecedor = fornecedor;
+    }
 }

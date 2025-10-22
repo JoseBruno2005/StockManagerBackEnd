@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @DiscriminatorValue("Alimento")
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Builder
 public class Alimento extends Item{
-
+    public Alimento(String nome, double preco, int quantidade, String foto, Fornecedor fornecedor) {
+        super(nome, preco, quantidade, foto, fornecedor);
+    }
 }

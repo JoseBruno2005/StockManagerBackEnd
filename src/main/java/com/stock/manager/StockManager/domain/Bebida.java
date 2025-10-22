@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @DiscriminatorValue("Bebida")
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Builder
-public class Bebida {
+public class Bebida extends Item{
+    public Bebida(String nome, double preco, int quantidade, String foto, Fornecedor fornecedor) {
+        super(nome, preco, quantidade, foto, fornecedor);
+    }
 }
