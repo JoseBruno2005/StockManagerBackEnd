@@ -12,7 +12,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,60 +22,69 @@ public class ItemServices {
     private final ItemMapper itemMapper;
     private final FornecedorRepository fornecedorRepository;
 
-    public ItemDTO criarItem(String factory, ItemDTO itemDTO){
+    public ItemDTO save(String factory, ItemDTO itemDTO) {
+        try {
+            Fornecedor fornecedor = fornecedorRepository.findById(itemDTO.getFornecedorId())
+                    .orElseThrow(() -> new IllegalArgumentException("Fornecedor não encontrado" +
+                            itemDTO.getFornecedorId()));
 
-        //Adicionar Try Cacth em todos os serviços
+            Item itemBase;
+            Item item;
 
-        Fornecedor fornecedor = fornecedorRepository.findById(itemDTO.getFornecedorId())
-                .orElseThrow(() -> new IllegalArgumentException("Fornecedor não encontrado" +
-                        itemDTO.getFornecedorId()));
-
-        Item itemBase;
-        Item item;
-
-        switch (factory.toUpperCase()){
-            case "ALIMENTO" :
-                itemBase = itemMapper.dtoToEntityAlimento(itemDTO);
-                item = new AlimentoFactory().criarItem(itemBase);
-                break;
-            case "BEBIDA" :
-                itemBase = itemMapper.dtoToEntityBebida(itemDTO);
-                item = new BebidaFactory().criarItem(itemBase);
-                break;
-            case "ELETRONICO" :
-                itemBase = itemMapper.dtoToEntityEletronico(itemDTO);
-                item = new EletronicoFactory().criarItem(itemBase);
-                break;
-            default:
-                throw new IllegalArgumentException("Tipo de item inválido: " + factory);
+            switch (factory.toUpperCase()) {
+                case "ALIMENTO":
+                    itemBase = itemMapper.dtoToEntityAlimento(itemDTO);
+                    item = new AlimentoFactory().criarItem(itemBase);
+                    break;
+                case "BEBIDA":
+                    itemBase = itemMapper.dtoToEntityBebida(itemDTO);
+                    item = new BebidaFactory().criarItem(itemBase);
+                    break;
+                case "ELETRONICO":
+                    itemBase = itemMapper.dtoToEntityEletronico(itemDTO);
+                    item = new EletronicoFactory().criarItem(itemBase);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Tipo de item inválido: " + factory);
+            }
+            item.setFornecedor(fornecedor);
+            item = itemRepository.save(item);
+            return itemMapper.entityToDto(item);
+        }catch (IllegalArgumentException e){
+            throw e;
+        }catch (Exception e) {
+            throw new RuntimeException("Erro ao criar o item: " + e.getMessage(), e);
         }
-        item.setFornecedor(fornecedor);
-        item = itemRepository.save(item);
-        return itemMapper.entityToDto(item);
     }
 
     @Transactional
     public void updateItem(Long id, ItemDTO itemDTO){
-        Item existingItem = itemRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Curso com ID " + id + " não encontrado."));
+        try {
+            Item existingItem = itemRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Curso com ID " + id + " não encontrado."));
 
-        if(itemDTO.getNome() != null && !itemDTO.getNome().trim().isEmpty()){
-            existingItem.setNome(itemDTO.getNome());
+            if (itemDTO.getNome() != null && !itemDTO.getNome().trim().isEmpty()) {
+                existingItem.setNome(itemDTO.getNome());
+            }
+
+            if (itemDTO.getPreco() != null && itemDTO.getPreco() > 0) {
+                existingItem.setPreco(itemDTO.getPreco());
+            }
+
+            if (itemDTO.getQuantidade() != null && itemDTO.getQuantidade() >= 0) {
+                existingItem.setQuantidade(itemDTO.getQuantidade());
+            }
+
+            if (itemDTO.getFoto() != null && !itemDTO.getNome().trim().isEmpty()) {
+                existingItem.setFoto(itemDTO.getFoto());
+            }
+
+            itemRepository.save(existingItem);
+        }catch (IllegalArgumentException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar o item com ID " + id + ".", e);
         }
-
-        if(itemDTO.getPreco() != null && itemDTO.getPreco() > 0){
-            existingItem.setPreco(itemDTO.getPreco());
-        }
-
-        if(itemDTO.getQuantidade() != null && itemDTO.getQuantidade() >= 0){
-            existingItem.setQuantidade(itemDTO.getQuantidade());
-        }
-
-        if(itemDTO.getFoto() != null && !itemDTO.getNome().trim().isEmpty()){
-            existingItem.setFoto(itemDTO.getFoto());
-        }
-
-        itemRepository.save(existingItem);
     }
 
     public void deleteItem(Long id){
@@ -93,22 +101,29 @@ public class ItemServices {
     }
 
     public List<ItemDTO> findAllItens(){
-        List<Item> listItem = itemRepository.findAll();
+        try{
+            List<Item> listItem = itemRepository.findAll();
 
-        List<ItemDTO> listItemDto = new ArrayList<>();
+            List<ItemDTO> listItemDto = new ArrayList<>();
 
-        listItem.forEach(item -> {
-            listItemDto.add(itemMapper.entityToDto(item));
-        });
+            listItem.forEach(item -> {
+                listItemDto.add(itemMapper.entityToDto(item));
+            });
 
-        return listItemDto;
+            return listItemDto;
+        }catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar itens: " + e.getMessage(), e);
+        }
     }
 
     public ItemDTO findItemById(Long id){
-        Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Item com ID " + id + " não encontrado."));
+        try{
+            Item item = itemRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Item com ID " + id + " não encontrado."));
 
-        return itemMapper.entityToDto(item);
+            return itemMapper.entityToDto(item);
+        }catch (Exception e) {
+            throw new RuntimeException("Erro ao buscar item com ID " + id + ".", e);
+        }
     }
-
 }

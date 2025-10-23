@@ -16,12 +16,10 @@ import java.util.List;
 public class ItemController {
 
     private final ItemServices itemServices;
-    private final ItemMapper itemMapper;
-
-    @PostMapping("/criar")
+    @PostMapping("/save")
     public ResponseEntity<ItemDTO> save(@RequestParam String factory, @RequestBody ItemDTO itemDTO){
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(itemServices.criarItem(factory,itemDTO));
+                .body(itemServices.save(factory,itemDTO));
     }
 
     @PutMapping("/{id}")
