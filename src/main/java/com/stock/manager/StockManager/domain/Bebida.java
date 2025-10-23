@@ -6,9 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @DiscriminatorValue("Bebida")
+@SuperBuilder
+@AllArgsConstructor
 @Data
 public class Bebida extends Item{
     public Bebida(String nome, double preco, int quantidade, String foto, Fornecedor fornecedor) {

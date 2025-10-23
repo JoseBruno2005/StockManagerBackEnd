@@ -19,6 +19,7 @@ public class Fornecedor {
     private String nome;
     private String telefone;
     private String email;
+    private String CNPJ;
 
     @OneToMany(mappedBy = "fornecedor")
     private List<Item> itens;
