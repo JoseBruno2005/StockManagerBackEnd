@@ -7,8 +7,8 @@ import lombok.Data;
 public class ItemDTO {
     private Long id;
     private String nome;
-    private double preco;
-    private int quantidade;
+    private Double preco;
+    private Integer quantidade;
     private String foto;
     private Long fornecedorId;
 }

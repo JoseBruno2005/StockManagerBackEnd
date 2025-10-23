@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @Data
 public class Bebida extends Item{
-    public Bebida(String nome, double preco, int quantidade, String foto, Fornecedor fornecedor) {
+    public Bebida(String nome, Double preco, Integer quantidade, String foto, Fornecedor fornecedor) {
         super(nome, preco, quantidade, foto, fornecedor);
     }
 }

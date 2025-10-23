@@ -23,8 +23,8 @@ public abstract class Item {
     private Long id;
 
     private String nome;
-    private double preco;
-    private int quantidade;
+    private Double preco;
+    private Integer quantidade;
 
     @Lob
     @Column(columnDefinition = "TEXT")
@@ -37,7 +37,7 @@ public abstract class Item {
     @OneToMany(mappedBy = "item")
     private List<Transacao> transacaoList;
 
-    public Item(String nome, double preco, int quantidade, String foto, Fornecedor fornecedor) {
+    public Item(String nome, Double preco, Integer quantidade, String foto, Fornecedor fornecedor) {
         this.nome = nome;
         this.preco = preco;
         this.quantidade = quantidade;

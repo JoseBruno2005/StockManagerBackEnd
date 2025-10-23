@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class Eletronico extends Item{
-    public Eletronico(String nome, double preco, int quantidade, String foto, Fornecedor fornecedor) {
+    public Eletronico(String nome, Double preco, Integer quantidade, String foto, Fornecedor fornecedor) {
         super(nome, preco, quantidade, foto, fornecedor);
     }
 }
