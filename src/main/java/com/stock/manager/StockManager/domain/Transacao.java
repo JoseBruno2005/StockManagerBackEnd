@@ -18,6 +18,7 @@ public class Transacao {
     private int quantidade;
     private String tipoTransacao;
     private Date data;
+    private Double valor;
 
     @ManyToOne
     @JoinColumn(name = "idItem")

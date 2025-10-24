@@ -126,4 +126,9 @@ public class ItemServices {
             throw new RuntimeException("Erro ao buscar item com ID " + id + ".", e);
         }
     }
+
+    public Item findItemEntityById(Long id) {
+        return itemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Item não encontrado"));
+    }
 }
