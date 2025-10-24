@@ -28,6 +28,7 @@ public abstract class Item {
 
     @Lob
     @Column(columnDefinition = "TEXT")
+    @Basic(fetch = FetchType.LAZY)
     private String foto;
 
     @ManyToOne
