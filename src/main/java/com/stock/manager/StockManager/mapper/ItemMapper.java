@@ -12,11 +12,14 @@ import org.mapstruct.Mapping;
 public interface ItemMapper {
     @Mapping(source = "fornecedorId", target = "fornecedor", ignore = true)
     Alimento dtoToEntityAlimento(ItemDTO itemDTO);
+
     @Mapping(source = "fornecedorId", target = "fornecedor", ignore = true)
     Bebida dtoToEntityBebida(ItemDTO itemDTO);
+
     @Mapping(source = "fornecedorId", target = "fornecedor", ignore = true)
     Eletronico dtoToEntityEletronico(ItemDTO itemDTO);
 
     @Mapping(target = "fornecedorId", expression = "java(item.getFornecedor() != null ? item.getFornecedor().getId() : null)")
+    @Mapping(target = "categoria", expression = "java(item.getClass().getAnnotation(jakarta.persistence.DiscriminatorValue.class).value())")
     ItemDTO entityToDto(Item item);
 }

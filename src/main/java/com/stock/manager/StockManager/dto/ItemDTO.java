@@ -11,4 +11,5 @@ public class ItemDTO {
     private Integer quantidade;
     private String foto;
     private Long fornecedorId;
+    private String categoria;
 }
