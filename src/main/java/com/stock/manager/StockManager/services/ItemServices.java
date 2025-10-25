@@ -8,9 +8,9 @@ import com.stock.manager.StockManager.factory.EletronicoFactory;
 import com.stock.manager.StockManager.mapper.ItemMapper;
 import com.stock.manager.StockManager.repository.FornecedorRepository;
 import com.stock.manager.StockManager.repository.ItemRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,5 +130,12 @@ public class ItemServices {
     public Item findItemEntityById(Long id) {
         return itemRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Item não encontrado"));
+    }
+
+    @Transactional(readOnly = true)
+    public String getFoto(Long id) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Item não encontrado"));
+        return item.getFoto();
     }
 }

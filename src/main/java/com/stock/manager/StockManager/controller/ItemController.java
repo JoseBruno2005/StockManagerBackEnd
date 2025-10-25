@@ -2,6 +2,7 @@ package com.stock.manager.StockManager.controller;
 import com.stock.manager.StockManager.domain.Item;
 import com.stock.manager.StockManager.dto.ItemDTO;
 import com.stock.manager.StockManager.mapper.ItemMapper;
+import com.stock.manager.StockManager.repository.ItemRepository;
 import com.stock.manager.StockManager.services.ItemServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 public class ItemController {
 
     private final ItemServices itemServices;
+
     @PostMapping("/save")
     public ResponseEntity<ItemDTO> save(@RequestParam String factory, @RequestBody ItemDTO itemDTO){
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -48,5 +50,11 @@ public class ItemController {
     public ResponseEntity<ItemDTO> findItemById(@PathVariable("id") Long id){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(itemServices.findItemById(id));
+    }
+
+    @GetMapping("/foto/{id}")
+    public ResponseEntity<String> getFoto(@PathVariable Long id) {
+        String foto = itemServices.getFoto(id);
+        return ResponseEntity.ok(foto);
     }
 }

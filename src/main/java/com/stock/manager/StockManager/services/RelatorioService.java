@@ -35,14 +35,12 @@ public class RelatorioService {
 
         for (Item item : itens) {
 
-            // Datas do primeiro ao último dia do mês
             LocalDate inicioMes = LocalDate.of(ano, mes, 1);
             LocalDate fimMes = inicioMes.withDayOfMonth(inicioMes.lengthOfMonth());
 
             Date inicio = Date.from(inicioMes.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            Date fim = Date.from(fimMes.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()); // inclui último dia
+            Date fim = Date.from(fimMes.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-            // Busca todas as transações do item no mês
             List<Transacao> transacoes = transacaoRepository.findByItemIdAndDataBetween(item.getId(), inicio, fim);
 
             int totalEntradas = transacoes.stream()

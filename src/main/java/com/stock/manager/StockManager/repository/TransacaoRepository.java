@@ -16,8 +16,4 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
                                                @Param("inicio") Date inicio,
                                                @Param("fim") Date fim);
 
-    @Query("SELECT t FROM Transacao t WHERE t.item.id = :itemId AND t.data < :data")
-    List<Transacao> findByItemIdAndDataBefore(@Param("itemId") Long itemId,
-                                              @Param("data") Date data);
-
 }
