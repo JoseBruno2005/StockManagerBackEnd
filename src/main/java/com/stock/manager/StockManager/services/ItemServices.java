@@ -9,6 +9,7 @@ import com.stock.manager.StockManager.mapper.ItemMapper;
 import com.stock.manager.StockManager.repository.FornecedorRepository;
 import com.stock.manager.StockManager.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,17 @@ public class ItemServices {
     private final ItemMapper itemMapper;
     private final FornecedorRepository fornecedorRepository;
 
+    @Value("${item.type.alimento}")
+    private String tipoAlimento;
+
+    @Value("${item.type.bebida}")
+    private String tipoBebida;
+
+    @Value("${item.type.eletronico}")
+    private String tipoEletronico;
+
     public ItemDTO save(String factory, ItemDTO itemDTO) {
+
         try {
             Fornecedor fornecedor = fornecedorRepository.findById(itemDTO.getFornecedorId())
                     .orElseThrow(() -> new IllegalArgumentException("Fornecedor não encontrado" +
@@ -31,23 +42,21 @@ public class ItemServices {
             Item itemBase;
             Item item;
 
-            switch (factory.toUpperCase()) {
-                case "ALIMENTO":
-                    itemBase = itemMapper.dtoToEntityAlimento(itemDTO);
-                    item = new AlimentoFactory().criarItem(itemBase);
-                    break;
-                case "BEBIDA":
-                    itemBase = itemMapper.dtoToEntityBebida(itemDTO);
-                    item = new BebidaFactory().criarItem(itemBase);
-                    break;
-                case "ELETRONICO":
-                    itemBase = itemMapper.dtoToEntityEletronico(itemDTO);
-                    item = new EletronicoFactory().criarItem(itemBase);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Tipo de item inválido: " + factory);
+            if (factory.equalsIgnoreCase(tipoAlimento)) {
+                itemBase = itemMapper.dtoToEntityAlimento(itemDTO);
+                item = new AlimentoFactory().criarItem(itemBase);
+            } else if (factory.equalsIgnoreCase(tipoBebida)) {
+                itemBase = itemMapper.dtoToEntityBebida(itemDTO);
+                item = new BebidaFactory().criarItem(itemBase);
+            } else if (factory.equalsIgnoreCase(tipoEletronico)) {
+                itemBase = itemMapper.dtoToEntityEletronico(itemDTO);
+                item = new EletronicoFactory().criarItem(itemBase);
+            } else {
+                throw new IllegalArgumentException("Tipo de item inválido: " + factory);
             }
+
             item.setFornecedor(fornecedor);
+            item.setQuantidade(0);   //aqui
             item = itemRepository.save(item);
             return itemMapper.entityToDto(item);
         }catch (IllegalArgumentException e){
@@ -61,7 +70,7 @@ public class ItemServices {
     public void updateItem(Long id, ItemDTO itemDTO){
         try {
             Item existingItem = itemRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Curso com ID " + id + " não encontrado."));
+                    .orElseThrow(() -> new IllegalArgumentException("Item com ID " + id + " não encontrado."));
 
             if (itemDTO.getNome() != null && !itemDTO.getNome().trim().isEmpty()) {
                 existingItem.setNome(itemDTO.getNome());
@@ -71,8 +80,8 @@ public class ItemServices {
                 existingItem.setPreco(itemDTO.getPreco());
             }
 
-            if (itemDTO.getQuantidade() != null && itemDTO.getQuantidade() >= 0) {
-                existingItem.setQuantidade(itemDTO.getQuantidade());
+            if (itemDTO.getQuantidade() != null) { //aqui
+                throw new IllegalArgumentException("Erro! a quantidade do item não pode ser modificada");
             }
 
             if (itemDTO.getFoto() != null && !itemDTO.getNome().trim().isEmpty()) {
@@ -130,6 +139,18 @@ public class ItemServices {
     public Item findItemEntityById(Long id) {
         return itemRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Item não encontrado"));
+    }
+
+    public void updateQuantidade(Long id, ItemDTO itemDTO){
+        try{
+            Item existingItem = itemRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Item com ID " + id + " não encontrado."));
+
+            existingItem.setQuantidade(itemDTO.getQuantidade());
+            itemRepository.save(existingItem);
+        }catch (Exception e){
+            throw new RuntimeException("Erro ao atualizar a quantidade do item com ID " + id + ".", e);
+        }
     }
 
     @Transactional(readOnly = true)

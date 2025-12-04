@@ -35,9 +35,6 @@ public abstract class Item {
     @JoinColumn(name = "fornecedor_id")
     private Fornecedor fornecedor;
 
-    @OneToMany(mappedBy = "item")
-    private List<Transacao> transacaoList;
-
     public Item(String nome, Double preco, Integer quantidade, String foto, Fornecedor fornecedor) {
         this.nome = nome;
         this.preco = preco;
