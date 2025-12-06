@@ -2,11 +2,11 @@ package com.stock.manager.StockManager.services;
 
 import com.stock.manager.StockManager.domain.Item;
 import com.stock.manager.StockManager.domain.Transacao;
-import com.stock.manager.StockManager.dto.TransacaoDTO;
+import com.stock.manager.StockManager.dto.request.TransacaoDTO;
+import com.stock.manager.StockManager.dto.response.TransacaoDTOResponse;
 import com.stock.manager.StockManager.mapper.ItemMapper;
 import com.stock.manager.StockManager.mapper.TransacaoMapper;
 import com.stock.manager.StockManager.repository.TransacaoRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class TransacaoService {
     @Value("${transacao.type.compra}")
     private String compra;
 
-    public TransacaoDTO criarTransacao(TransacaoDTO transacaoDTO){
+    public TransacaoDTOResponse criarTransacao(TransacaoDTO transacaoDTO){
 
         String tipo = transacaoDTO.getTipoTransacao().toUpperCase();
         Transacao transacao = transacaoMapper.dtoToEntity(transacaoDTO);

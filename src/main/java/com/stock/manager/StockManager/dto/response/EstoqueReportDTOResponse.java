@@ -1,11 +1,11 @@
-package com.stock.manager.StockManager.dto;
+package com.stock.manager.StockManager.dto.response;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class EstoqueReportDTO {
+public class EstoqueReportDTOResponse {
     private Long itemId;
     private String nomeItem;
     private Integer totalEntradas;

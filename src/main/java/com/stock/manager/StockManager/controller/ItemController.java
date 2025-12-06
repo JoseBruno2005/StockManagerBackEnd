@@ -1,8 +1,6 @@
 package com.stock.manager.StockManager.controller;
-import com.stock.manager.StockManager.domain.Item;
-import com.stock.manager.StockManager.dto.ItemDTO;
-import com.stock.manager.StockManager.mapper.ItemMapper;
-import com.stock.manager.StockManager.repository.ItemRepository;
+import com.stock.manager.StockManager.dto.request.ItemDTO;
+import com.stock.manager.StockManager.dto.response.ItemDTOResponse;
 import com.stock.manager.StockManager.services.ItemServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +17,7 @@ public class ItemController {
     private final ItemServices itemServices;
 
     @PostMapping("/save")
-    public ResponseEntity<ItemDTO> save(@RequestParam String factory, @RequestBody ItemDTO itemDTO){
+    public ResponseEntity<ItemDTOResponse> save(@RequestParam String factory, @RequestBody ItemDTO itemDTO){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(itemServices.save(factory,itemDTO));
     }
@@ -41,13 +39,13 @@ public class ItemController {
     }
 
     @GetMapping("/listItens")
-    public ResponseEntity<List<ItemDTO>> findAllItems(){
+    public ResponseEntity<List<ItemDTOResponse>> findAllItems(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(itemServices.findAllItens());
     }
 
     @GetMapping("/find/{id}")
-    public ResponseEntity<ItemDTO> findItemById(@PathVariable("id") Long id){
+    public ResponseEntity<ItemDTOResponse> findItemById(@PathVariable("id") Long id){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(itemServices.findItemById(id));
     }

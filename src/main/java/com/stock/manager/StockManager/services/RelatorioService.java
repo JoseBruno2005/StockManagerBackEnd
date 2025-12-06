@@ -1,10 +1,10 @@
 package com.stock.manager.StockManager.services;
 
-import com.stock.manager.StockManager.dto.EstoqueReportDTO;
 import com.stock.manager.StockManager.domain.Item;
 import com.stock.manager.StockManager.domain.Transacao;
-import com.stock.manager.StockManager.dto.TransacaoDTO;
-import com.stock.manager.StockManager.dto.TransacaoHistoricoDTO;
+import com.stock.manager.StockManager.dto.request.TransacaoDTO;
+import com.stock.manager.StockManager.dto.response.EstoqueReportDTOResponse;
+import com.stock.manager.StockManager.dto.response.TransacaoDTOResponse;
 import com.stock.manager.StockManager.mapper.TransacaoMapper;
 import com.stock.manager.StockManager.repository.ItemRepository;
 import com.stock.manager.StockManager.repository.TransacaoRepository;
@@ -28,9 +28,9 @@ public class RelatorioService {
     private final ItemRepository itemRepository;
     private final TransacaoMapper transacaoMapper;
 
-    public List<EstoqueReportDTO> gerarRelatorioMensal(int mes, int ano) {
+    public List<EstoqueReportDTOResponse> gerarRelatorioMensal(int mes, int ano) {
 
-        List<EstoqueReportDTO> relatorio = new ArrayList<>();
+        List<EstoqueReportDTOResponse> relatorio = new ArrayList<>();
         List<Item> itens = itemRepository.findAll();
 
         for (Item item : itens) {
@@ -55,7 +55,7 @@ public class RelatorioService {
 
             int quantidadeAtual = item.getQuantidade();
 
-            EstoqueReportDTO dto = EstoqueReportDTO.builder()
+            EstoqueReportDTOResponse dto = EstoqueReportDTOResponse.builder()
                     .itemId(item.getId())
                     .nomeItem(item.getNome())
                     .totalEntradas(totalEntradas)
@@ -70,7 +70,7 @@ public class RelatorioService {
     }
 
     @Transactional(readOnly = true)
-    public List<TransacaoDTO> gerarHistoricoItem(Long itemId, Date inicio, Date fim) {
+    public List<TransacaoDTOResponse> gerarHistoricoItem(Long itemId, Date inicio, Date fim) {
         Instant fimAjustado = fim.toInstant().plus(1, ChronoUnit.DAYS);
         Date fimCompleto = Date.from(fimAjustado);
 

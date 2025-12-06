@@ -1,9 +1,8 @@
 package com.stock.manager.StockManager.controller;
 
-import com.stock.manager.StockManager.dto.FornecedorDTO;
+import com.stock.manager.StockManager.dto.request.FornecedorDTO;
 import com.stock.manager.StockManager.services.FornecedorService;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Mapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

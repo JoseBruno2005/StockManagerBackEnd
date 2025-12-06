@@ -1,7 +1,8 @@
 package com.stock.manager.StockManager.mapper;
 
 import com.stock.manager.StockManager.domain.Usuario;
-import com.stock.manager.StockManager.dto.UsuarioDTO;
+import com.stock.manager.StockManager.dto.request.UsuarioDTO;
+import com.stock.manager.StockManager.dto.response.UsuarioDTOResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -9,5 +10,5 @@ import org.mapstruct.Mapping;
 public interface UsuarioMapper {
     @Mapping(target = "id", ignore = true)
     Usuario dtoToEntity(UsuarioDTO usuarioDTO);
-    UsuarioDTO entityTodto(Usuario usuario);
+    UsuarioDTOResponse entityTodto(Usuario usuario);
 }

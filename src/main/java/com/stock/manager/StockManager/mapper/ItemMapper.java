@@ -4,7 +4,8 @@ import com.stock.manager.StockManager.domain.Alimento;
 import com.stock.manager.StockManager.domain.Bebida;
 import com.stock.manager.StockManager.domain.Eletronico;
 import com.stock.manager.StockManager.domain.Item;
-import com.stock.manager.StockManager.dto.ItemDTO;
+import com.stock.manager.StockManager.dto.request.ItemDTO;
+import com.stock.manager.StockManager.dto.response.ItemDTOResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -19,7 +20,6 @@ public interface ItemMapper {
     @Mapping(source = "fornecedorId", target = "fornecedor", ignore = true)
     Eletronico dtoToEntityEletronico(ItemDTO itemDTO);
 
-    @Mapping(target = "fornecedorId", expression = "java(item.getFornecedor() != null ? item.getFornecedor().getId() : null)")
     @Mapping(target = "categoria", expression = "java(item.getClass().getAnnotation(jakarta.persistence.DiscriminatorValue.class).value())")
-    ItemDTO entityToDto(Item item);
+    ItemDTOResponse entityToDto(Item item);
 }

@@ -1,7 +1,8 @@
 package com.stock.manager.StockManager.mapper;
 
 import com.stock.manager.StockManager.domain.*;
-import com.stock.manager.StockManager.dto.TransacaoDTO;
+import com.stock.manager.StockManager.dto.request.TransacaoDTO;
+import com.stock.manager.StockManager.dto.response.TransacaoDTOResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -11,5 +12,5 @@ public interface TransacaoMapper {
     Transacao dtoToEntity(TransacaoDTO transacaoDTO);
 
     @Mapping(target = "itemId", expression = "java(transacao.getItem() != null ? transacao.getItem().getId() : null)")
-    TransacaoDTO entityToDto(Transacao transacao);
+    TransacaoDTOResponse entityToDto(Transacao transacao);
 }

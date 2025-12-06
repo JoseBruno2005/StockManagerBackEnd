@@ -1,7 +1,7 @@
 package com.stock.manager.StockManager.mapper;
 
 import com.stock.manager.StockManager.domain.Fornecedor;
-import com.stock.manager.StockManager.dto.FornecedorDTO;
+import com.stock.manager.StockManager.dto.request.FornecedorDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

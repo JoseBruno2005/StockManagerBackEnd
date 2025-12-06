@@ -1,7 +1,8 @@
 package com.stock.manager.StockManager.services;
 import com.stock.manager.StockManager.domain.Fornecedor;
 import com.stock.manager.StockManager.domain.Item;
-import com.stock.manager.StockManager.dto.ItemDTO;
+import com.stock.manager.StockManager.dto.request.ItemDTO;
+import com.stock.manager.StockManager.dto.response.ItemDTOResponse;
 import com.stock.manager.StockManager.factory.AlimentoFactory;
 import com.stock.manager.StockManager.factory.BebidaFactory;
 import com.stock.manager.StockManager.factory.EletronicoFactory;
@@ -32,7 +33,7 @@ public class ItemServices {
     @Value("${item.type.eletronico}")
     private String tipoEletronico;
 
-    public ItemDTO save(String factory, ItemDTO itemDTO) {
+    public ItemDTOResponse save(String factory, ItemDTO itemDTO) {
 
         try {
             Fornecedor fornecedor = fornecedorRepository.findById(itemDTO.getFornecedorId())
@@ -109,11 +110,11 @@ public class ItemServices {
         }
     }
 
-    public List<ItemDTO> findAllItens(){
+    public List<ItemDTOResponse> findAllItens(){
         try{
             List<Item> listItem = itemRepository.findAll();
 
-            List<ItemDTO> listItemDto = new ArrayList<>();
+            List<ItemDTOResponse> listItemDto = new ArrayList<>();
 
             listItem.forEach(item -> {
                 listItemDto.add(itemMapper.entityToDto(item));
@@ -125,7 +126,7 @@ public class ItemServices {
         }
     }
 
-    public ItemDTO findItemById(Long id){
+    public ItemDTOResponse findItemById(Long id){
         try{
             Item item = itemRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Item com ID " + id + " não encontrado."));
@@ -141,12 +142,12 @@ public class ItemServices {
                 .orElseThrow(() -> new IllegalArgumentException("Item não encontrado"));
     }
 
-    public void updateQuantidade(Long id, ItemDTO itemDTO){
+    public void updateQuantidade(Long id, ItemDTOResponse itemDTOResponse){
         try{
             Item existingItem = itemRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Item com ID " + id + " não encontrado."));
 
-            existingItem.setQuantidade(itemDTO.getQuantidade());
+            existingItem.setQuantidade(itemDTOResponse.getQuantidade());
             itemRepository.save(existingItem);
         }catch (Exception e){
             throw new RuntimeException("Erro ao atualizar a quantidade do item com ID " + id + ".", e);

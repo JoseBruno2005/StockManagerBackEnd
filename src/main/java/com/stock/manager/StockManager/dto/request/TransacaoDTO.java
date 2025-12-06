@@ -1,8 +1,5 @@
-package com.stock.manager.StockManager.dto;
+package com.stock.manager.StockManager.dto.request;
 
-import com.stock.manager.StockManager.domain.Item;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Data;
 

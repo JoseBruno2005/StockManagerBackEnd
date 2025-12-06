@@ -1,4 +1,4 @@
-package com.stock.manager.StockManager.dto;
+package com.stock.manager.StockManager.dto.request;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,10 +1,9 @@
 package com.stock.manager.StockManager.controller;
 
-import com.stock.manager.StockManager.dto.EstoqueReportDTO;
-import com.stock.manager.StockManager.dto.TransacaoDTO;
-import com.stock.manager.StockManager.dto.TransacaoHistoricoDTO;
+import com.stock.manager.StockManager.dto.request.TransacaoDTO;
+import com.stock.manager.StockManager.dto.response.EstoqueReportDTOResponse;
+import com.stock.manager.StockManager.dto.response.TransacaoDTOResponse;
 import com.stock.manager.StockManager.services.RelatorioService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ public class RelatorioController {
 
 
     @GetMapping("/mensal")
-    public List<EstoqueReportDTO> getRelatorioMensal(
+    public List<EstoqueReportDTOResponse> getRelatorioMensal(
             @RequestParam int mes,
             @RequestParam int ano
     ) {
@@ -31,12 +30,12 @@ public class RelatorioController {
 
 
     @GetMapping("/historico/{itemId}")
-    public ResponseEntity<List<TransacaoDTO>> gerarHistorico(
+    public ResponseEntity<List<TransacaoDTOResponse>> gerarHistorico(
             @PathVariable Long itemId,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date inicio,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fim) {
 
-        List<TransacaoDTO> relatorio = relatorioService.gerarHistoricoItem(itemId, inicio, fim);
+        List<TransacaoDTOResponse> relatorio = relatorioService.gerarHistoricoItem(itemId, inicio, fim);
         return ResponseEntity.ok(relatorio);
     }
 }

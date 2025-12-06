@@ -1,7 +1,8 @@
 package com.stock.manager.StockManager.services;
 
 import com.stock.manager.StockManager.domain.Usuario;
-import com.stock.manager.StockManager.dto.UsuarioDTO;
+import com.stock.manager.StockManager.dto.request.UsuarioDTO;
+import com.stock.manager.StockManager.dto.response.UsuarioDTOResponse;
 import com.stock.manager.StockManager.mapper.UsuarioMapper;
 import com.stock.manager.StockManager.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,8 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
-    public UsuarioDTO save(UsuarioDTO usuarioDTO){
+
+    public UsuarioDTOResponse save(UsuarioDTO usuarioDTO){
         try{
             Usuario usuario = usuarioMapper.dtoToEntity(usuarioDTO);
             return usuarioMapper.entityTodto(usuarioRepository.save(usuario));
@@ -24,12 +26,13 @@ public class UsuarioService {
         }
     }
 
-    public UsuarioDTO findByEmail(String email){
-        return usuarioMapper.entityTodto(usuarioRepository.findByEmailUser(email));
+    public Usuario findByEmail(String email){
+        return usuarioRepository.findByEmailUser(email);
     }
-    public UsuarioDTO login(String email, String password){
+
+    public UsuarioDTOResponse login(String email, String password){
         try{
-            UsuarioDTO existingUser = findByEmail(email);
+            Usuario existingUser = findByEmail(email);
 
             if (existingUser == null) {
                 throw new IllegalArgumentException("Usuário não encontrado");
@@ -37,7 +40,7 @@ public class UsuarioService {
             if (!existingUser.getPassword().equals(password)) {
                 throw new IllegalArgumentException("Senha invalida:");
             }
-            return existingUser;
+            return usuarioMapper.entityTodto(existingUser);
         }catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
