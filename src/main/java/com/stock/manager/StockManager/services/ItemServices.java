@@ -37,8 +37,7 @@ public class ItemServices {
 
         try {
             Fornecedor fornecedor = fornecedorRepository.findById(itemDTO.getFornecedorId())
-                    .orElseThrow(() -> new IllegalArgumentException("Fornecedor não encontrado" +
-                            itemDTO.getFornecedorId()));
+                    .orElseThrow(() -> new IllegalArgumentException("Fornecedor não encontrado"));
 
             Item itemBase;
             Item item;
@@ -53,7 +52,7 @@ public class ItemServices {
                 itemBase = itemMapper.dtoToEntityEletronico(itemDTO);
                 item = new EletronicoFactory().criarItem(itemBase);
             } else {
-                throw new IllegalArgumentException("Tipo de item inválido: " + factory);
+                throw new IllegalArgumentException("Tipo de item inválido");
             }
 
             item.setFornecedor(fornecedor);
@@ -63,7 +62,7 @@ public class ItemServices {
         }catch (IllegalArgumentException e){
             throw e;
         }catch (Exception e) {
-            throw new RuntimeException("Erro ao criar o item: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao criar o item: " + e.getMessage());
         }
     }
 
