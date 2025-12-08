@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,7 +44,7 @@ public class ItemServiceTest {
     private ItemServices itemServices;
 
     @Test
-    void TestarCriarItemEletronico(){
+    void TestarCriarItemEletronico() {
 
         ReflectionTestUtils.setField(itemServices, "tipoEletronico", "ELETRONICO");
 
@@ -76,7 +77,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void TestarCriarItemBebida(){
+    void TestarCriarItemBebida() {
 
         ReflectionTestUtils.setField(itemServices, "tipoBebida", "BEBIDA");
 
@@ -109,7 +110,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void TestarCriarItemAlimento(){
+    void TestarCriarItemAlimento() {
 
         ReflectionTestUtils.setField(itemServices, "tipoAlimento", "ALIMENTO");
 
@@ -142,7 +143,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void TestarCriarItemSemFornecedor(){
+    void TestarCriarItemSemFornecedor() {
 
         ReflectionTestUtils.setField(itemServices, "tipoAlimento", "ALIMENTO");
 
@@ -160,7 +161,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void TestarCriarItemComTipoInexistente(){
+    void TestarCriarItemComTipoInexistente() {
 
         ReflectionTestUtils.setField(itemServices, "tipoAlimento", "ALIMENTO");
         ReflectionTestUtils.setField(itemServices, "tipoBebida", "BEBIDA");
@@ -186,12 +187,11 @@ public class ItemServiceTest {
     }
 
     @Test
-    void TestarErroAoCriarItem(){
+    void TestarErroAoCriarItem() {
 
         ReflectionTestUtils.setField(itemServices, "tipoAlimento", "ALIMENTO");
 
         ItemDTO itemDTO = ItemDTOStubs.createItemDTOAlimento();
-        Item item = ItemStubs.createAlimento();
 
         when(fornecedorRepository.findById(1L))
                 .thenReturn(Optional.of(FornecedorStubs.crateFornecedor()));
@@ -207,6 +207,254 @@ public class ItemServiceTest {
         assertTrue(exception.getMessage().contains("Erro ao criar o item: " + "Falha na conversão"));
         verify(itemRepository, never()).save(any());
 
+    }
+
+    @Test
+    void TestarAtualizarNomeDoItem() {
+
+        ItemDTO itemDTO = ItemDTOStubs.createItemDTOAEletronicoComNome();
+        Item item = ItemStubs.createEletronico();
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
+
+        itemServices.updateItem(1L, itemDTO);
+
+        assertEquals("Arroz", item.getNome());
+        verify(itemRepository).save(item);
+    }
+
+    @Test
+    void TestarAtualizarPrecoDoItem() {
+
+        ItemDTO itemDTO = ItemDTOStubs.createItemDTOEletronicoComPreco();
+        Item item = ItemStubs.createEletronico();
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
+
+        itemServices.updateItem(1L, itemDTO);
+
+        assertEquals(2500.0, item.getPreco());
+        verify(itemRepository).save(item);
+    }
+
+    @Test
+    void TestarAtualizarQuantidadeDoItem() {
+
+        ItemDTO itemDTO = ItemDTOStubs.createItemDTOEletronicoComQuantidade();
+        Item item = ItemStubs.createEletronico();
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> itemServices.updateItem(1L, itemDTO)
+        );
+        assertEquals("Erro! a quantidade do item não pode ser modificada", exception.getMessage());
+
+        verify(itemRepository, never()).save(any());
+    }
+
+    @Test
+    void TestarAtualizarFotoDoItem() {
+
+        ItemDTO itemDTO = ItemDTOStubs.createItemDTOEletronicoComFoto();
+        Item item = ItemStubs.createEletronico();
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
+
+        itemServices.updateItem(1L, itemDTO);
+
+        assertEquals("foto-base64", item.getFoto());
+        verify(itemRepository).save(item);
+    }
+
+    @Test
+    void TestarErroGenericoAoAtualizarItem() {
+
+        ItemDTO itemDTO = ItemDTOStubs.createItemDTOAEletronicoComNome();
+        Item item = ItemStubs.createEletronico();
+
+        when(itemRepository.findById(item.getId()))
+                .thenReturn(Optional.of(item));
+
+        when(itemRepository.save(item))
+                .thenThrow(new NullPointerException("Erro no banco"));
+
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> itemServices.updateItem(1L, itemDTO)
+        );
+
+        assertEquals("Erro ao atualizar o item", exception.getMessage());
+    }
+
+    @Test
+    void TestarDeletarItem() {
+
+        Item item = ItemStubs.createEletronico();
+
+        when(itemRepository.findById(item.getId()))
+                .thenReturn(Optional.of(item));
+
+        itemServices.deleteItem(1L);
+
+        verify(itemRepository).deleteById(1L);
+    }
+
+    @Test
+    void TestarErroQuandoItemNaoExiste() {
+
+        when(itemRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            itemServices.deleteItem(1L);
+        });
+
+        verify(itemRepository, never()).deleteById(anyLong());
+    }
+
+    @Test
+    void TestarErroQuandoErroInesperadoAcontece() {
+
+        when(itemRepository.findById(1L))
+                .thenThrow(new RuntimeException("Erro no banco"));
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            itemServices.deleteItem(1L);
+        });
+
+        assertTrue(ex.getMessage().contains("Erro ao excluir o item"));
+    }
+
+    @Test
+    void TestarBuscarTodosOsItens() {
+
+        ItemDTOResponse itemDTO = ItemDTOResponseStubs.createItemDTOEletronicoResponse();
+        Item item = ItemStubs.createEletronico();
+
+        when(itemRepository.findAll())
+                .thenReturn(List.of(item));
+
+        when(itemMapper.entityToDto(item))
+                .thenReturn(itemDTO);
+
+        List<ItemDTOResponse> result = itemServices.findAllItens();
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(itemDTO, result.get(0));
+
+        verify(itemRepository).findAll();
+        verify(itemMapper).entityToDto(item);
+    }
+
+    @Test
+    void TestarErroGenericoAoBuscarTodosOsItens() {
+
+        when(itemRepository.findAll())
+                .thenThrow(new RuntimeException("Falha no banco"));
+
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> itemServices.findAllItens()
+        );
+
+        assertTrue(exception.getMessage().contains("Erro ao buscar itens"));
+
+        verify(itemMapper, never()).entityToDto(any());
+    }
+
+    @Test
+    void TestarBuscarItemPorId() {
+
+        ItemDTOResponse itemDTO = ItemDTOResponseStubs.createItemDTOEletronicoResponse();
+        Item item = ItemStubs.createEletronico();
+
+        when(itemRepository.findById(1L))
+                .thenReturn(Optional.of(item));
+
+        when(itemMapper.entityToDto(item))
+                .thenReturn(itemDTO);
+
+        ItemDTOResponse result = itemServices.findItemById(1L);
+
+        assertNotNull(result);
+        assertEquals(itemDTO, result);
+
+        verify(itemRepository).findById(1L);
+        verify(itemMapper).entityToDto(item);
+    }
+
+    @Test
+    void TestarErroItemNaoEncontradoAoBuscarPorId() {
+
+        when(itemRepository.findById(1L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> {
+            itemServices.findItemById(1L);
+        });
+
+        verify(itemMapper, never()).entityToDto(any());
+    }
+
+    @Test
+    void TestarBuscarItemPorIdEntity() {
+
+        Item item = ItemStubs.createEletronico();
+
+        when(itemRepository.findById(1L))
+                .thenReturn(Optional.of(item));
+
+        Item result = itemServices.findItemEntityById(1L);
+
+        assertEquals(item, result);
+    }
+
+    @Test
+    void TestarAtualizarQuantidadeDoItemInterno() {
+
+        Item item = ItemStubs.createEletronico();
+        ItemDTOResponse dto = ItemDTOResponseStubs.createItemDTOEletronicoComQuantidade();
+
+        when(itemRepository.findById(item.getId()))
+                .thenReturn(Optional.of(item));
+
+        itemServices.updateQuantidade(item.getId(), dto);
+
+        assertEquals(10, item.getQuantidade());
+        verify(itemRepository).save(item);
+
+    }
+
+    @Test
+    void TestarAtualizarQuantidadeDoItemInternoComErro() {
+
+        Item item = ItemStubs.createEletronico();
+        ItemDTOResponse dto = ItemDTOResponseStubs.createItemDTOEletronicoComQuantidade();
+
+        when(itemRepository.findById(1L))
+                .thenReturn(Optional.of(item));
+
+        when(itemRepository.save(item))
+                .thenThrow(new RuntimeException("Falha no banco"));
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            itemServices.updateQuantidade(1L, dto);
+        });
+
+        assertTrue(exception.getMessage().contains("Erro ao atualizar a quantidade do item com ID 1."));
+    }
+
+    @Test
+    void TestarGetFotoComSucesso() {
+
+        Item item = ItemStubs.createEletronico();
+
+        when(itemRepository.findById(1L))
+                .thenReturn(Optional.of(item));
+
+        String foto = itemServices.getFoto(1L);
+
+        assertEquals(item.getFoto(), foto);
+        verify(itemRepository).findById(1L);
     }
 
 }

@@ -34,4 +34,28 @@ public class ItemDTOStubs {
                 .build();
     }
 
+    public static ItemDTO createItemDTOAEletronicoComNome() {
+        return ItemDTO.builder()
+                .nome("Arroz")
+                .build();
+    }
+
+    public static ItemDTO createItemDTOEletronicoComPreco() {
+        return ItemDTO.builder()
+                .preco(2500.0)
+                .build();
+    }
+
+    public static ItemDTO createItemDTOEletronicoComQuantidade() {
+        return ItemDTO.builder()
+                .quantidade(10)
+                .build();
+    }
+    public static ItemDTO createItemDTOEletronicoComFoto() {
+        return ItemDTO.builder()
+                .nome("Arroz")
+                .foto("foto-base64")
+                .build();
+    }
+
 }

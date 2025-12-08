@@ -1,5 +1,6 @@
 package com.stock.manager.StockManager.stubs.itemStubs;
 
+import com.stock.manager.StockManager.dto.request.ItemDTO;
 import com.stock.manager.StockManager.dto.response.ItemDTOResponse;
 
 public class ItemDTOResponseStubs {
@@ -34,4 +35,9 @@ public class ItemDTOResponseStubs {
                 .build();
     }
 
+    public static ItemDTOResponse createItemDTOEletronicoComQuantidade() {
+        return ItemDTOResponse.builder()
+                .quantidade(10)
+                .build();
+    }
 }

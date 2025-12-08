@@ -80,7 +80,7 @@ public class ItemServices {
                 existingItem.setPreco(itemDTO.getPreco());
             }
 
-            if (itemDTO.getQuantidade() != null) { //aqui
+            if (itemDTO.getQuantidade() != null) {
                 throw new IllegalArgumentException("Erro! a quantidade do item não pode ser modificada");
             }
 
@@ -92,7 +92,7 @@ public class ItemServices {
         }catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar o item com ID " + id + ".", e);
+            throw new RuntimeException("Erro ao atualizar o item");
         }
     }
 
