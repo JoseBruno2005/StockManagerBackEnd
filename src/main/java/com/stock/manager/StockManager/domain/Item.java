@@ -32,7 +32,12 @@ public abstract class Item {
     private String foto;
 
     @ManyToOne
-    @JoinColumn(name = "fornecedor_id")
+    @JoinColumn(name = "fornecedor_id",
+            foreignKey = @ForeignKey(
+                    foreignKeyDefinition = "FOREIGN KEY (fornecedor_id) REFERENCES " +
+                            "fornecedor(id) ON DELETE SET NULL"
+            )
+    )
     private Fornecedor fornecedor;
 
     public Item(String nome, Double preco, Integer quantidade, String foto, Fornecedor fornecedor) {

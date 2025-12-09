@@ -21,7 +21,13 @@ public class Transacao {
     private Double valor;
 
     @ManyToOne
-    @JoinColumn(name = "idItem")
+    @JoinColumn(
+            name = "id_Item",
+            foreignKey = @ForeignKey(
+                    foreignKeyDefinition = "FOREIGN KEY (id_Item) REFERENCES " +
+                            "item(id) ON DELETE SET NULL"
+            )
+    )
     private Item item;
 
 }
