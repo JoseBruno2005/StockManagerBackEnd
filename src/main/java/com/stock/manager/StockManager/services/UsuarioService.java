@@ -22,7 +22,7 @@ public class UsuarioService {
         }catch (IllegalArgumentException e){
             throw e;
         }catch (Exception e) {
-            throw new RuntimeException("Erro ao criar o usuario: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao criar o usuario: " + e.getMessage());
         }
     }
 
@@ -44,7 +44,7 @@ public class UsuarioService {
         }catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao realizar login: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao realizar login: " + e.getMessage());
         }
     }
 }
