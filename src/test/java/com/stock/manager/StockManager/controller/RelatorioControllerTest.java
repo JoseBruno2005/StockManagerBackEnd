@@ -35,9 +35,6 @@ class RelatorioControllerTest {
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    // =============================================================
-    // TESTE DO RELATÓRIO MENSAL
-    // =============================================================
     @Test
     void testarRelatorioMensal() throws Exception {
 
@@ -67,9 +64,6 @@ class RelatorioControllerTest {
         verify(relatorioService).gerarRelatorioMensal(12, 2025);
     }
 
-    // =============================================================
-    // TESTE DO RELATÓRIO DE HISTÓRICO
-    // =============================================================
     @Test
     void testarGerarHistoricoItem() throws Exception {
 
