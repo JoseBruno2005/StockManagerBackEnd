@@ -8,8 +8,9 @@ public class FornecedorStubs {
         return Fornecedor.builder()
                 .id(1L)
                 .nome("Fornecedor Teste")
-                .email("email@teste.com")
                 .telefone("999999999")
+                .email("email@teste.com")
+                .CNPJ("20.182.807/0001-42")
                 .build();
     }
 

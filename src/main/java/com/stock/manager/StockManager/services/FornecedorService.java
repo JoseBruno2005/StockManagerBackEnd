@@ -24,7 +24,7 @@ public class FornecedorService {
         }catch (IllegalArgumentException e){
             throw e;
         }catch (Exception e) {
-            throw new RuntimeException("Erro ao criar o item: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao criar o item: " + e.getMessage());
         }
     }
 
@@ -32,7 +32,7 @@ public class FornecedorService {
     public void updateFornecedor(Long id, FornecedorDTO fornecedorDTO){
         try {
             Fornecedor existingForneceor = fornecedorRepository.findById(id)
-                    .orElseThrow(() -> new IllegalArgumentException("Curso com ID " + id + " não encontrado."));
+                    .orElseThrow(() -> new IllegalArgumentException("Fornecedor com não encontrado."));
 
             if (fornecedorDTO.getNome() != null && !fornecedorDTO.getNome().trim().isEmpty()) {
                 existingForneceor.setNome(fornecedorDTO.getNome());
@@ -54,9 +54,10 @@ public class FornecedorService {
         }catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao atualizar o fornecedor com ID " + id + ".", e);
+            throw new RuntimeException("Erro ao atualizar o fornecedor com.");
         }
     }
+
     public List<FornecedorDTO> listAll() {
         try{
             List<Fornecedor> listFornecedor = fornecedorRepository.findAll();
@@ -68,9 +69,10 @@ public class FornecedorService {
             });
             return listFornecedorDTO;
         }catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar itens: " + e.getMessage(), e);
+            throw new RuntimeException("Erro ao buscar fornecedores: " + e.getMessage());
         }
     }
+
     public FornecedorDTO findById(Long id) {
         try{
             Fornecedor fornecedor = fornecedorRepository.findById(id).
@@ -78,7 +80,7 @@ public class FornecedorService {
 
             return fornecedorMapper.entityToDto(fornecedor);
         }catch (Exception e) {
-            throw new RuntimeException("Erro ao buscar item com ID " + id + ".", e);
+            throw new RuntimeException("Erro ao buscar fornecedor com ID " + id + e.getMessage());
         }
     }
 
@@ -91,7 +93,7 @@ public class FornecedorService {
         }catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao excluir o item com ID " + id + ".", e);
+            throw new RuntimeException("Erro ao excluir o fornecedor com ID " + id + e.getMessage());
         }
     }
 }
